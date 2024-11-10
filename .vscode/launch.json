@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        // Backend Debugging (Node.js)
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Backend (Node.js)",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "/home/pranav/Music/FSAD_Assihnment1/book-exchange-platform/backend/server.js", // Update with the path to your server entry file
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "outputCapture": "std"
+        },
+
+        // Frontend Debugging (React)
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Frontend (React)",
+            "url": "http://localhost:3000", // Default React development server URL
+            "webRoot": "/home/pranav/Music/FSAD_Assihnment1/book-exchange-platform/frontend/src",
+            "runtimeExecutable": "/usr/bin/google-chrome-stable", // Path to Chrome, change if needed
+            "port": 9222
+        }
+    ]
+}

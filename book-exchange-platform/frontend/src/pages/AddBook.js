@@ -1,41 +1,73 @@
-// src/pages/AddBook.js
 import React, { useState } from 'react';
-import { addBook } from '../services/api';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function AddBook() {
-    const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('');
-    const [genre, setGenre] = useState('');
-    const [condition, setCondition] = useState('New');
-    const navigate = useNavigate();
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [genre, setGenre] = useState('');
+  const [condition, setCondition] = useState('');
+  const [availability, setAvailability] = useState(''); // true or false
+  const navigate = useNavigate();
 
-    const handleAddBook = async (e) => {
-        e.preventDefault();
-        const token = localStorage.getItem('token');
-        if (!token) return navigate('/login');
-        try {
-            await addBook({ title, author, genre, condition, availability: true }, token);
-            navigate('/books');
-        } catch (error) {
-            console.error('Failed to add book:', error.message);
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const bookData = {
+      title,
+      author,
+      genre,
+      condition,
+      availability,
     };
 
-    return (
-        <form onSubmit={handleAddBook}>
-            <h2>Add New Book</h2>
-            <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-            <input type="text" placeholder="Author" value={author} onChange={(e) => setAuthor(e.target.value)} />
-            <input type="text" placeholder="Genre" value={genre} onChange={(e) => setGenre(e.target.value)} />
-            <select value={condition} onChange={(e) => setCondition(e.target.value)}>
-                <option value="New">New</option>
-                <option value="Good">Good</option>
-                <option value="Used">Used</option>
-            </select>
-            <button type="submit">Add Book</button>
-        </form>
-    );
+    try {
+      const response = await axios.post('http://localhost:5000/api/books/add', bookData);
+      console.log('Book added:', response.data);
+      navigate('/books'); // Navigate to book listing after successful addition
+    } catch (error) {
+      console.error('Error adding book:', error);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Add a Book</h1>
+      <form onSubmit={handleSubmit}>
+        <input 
+          type="text" 
+          placeholder="Title" 
+          value={title} 
+          onChange={(e) => setTitle(e.target.value)} 
+        />
+        <input 
+          type="text" 
+          placeholder="Author" 
+          value={author} 
+          onChange={(e) => setAuthor(e.target.value)} 
+        />
+        <input 
+          type="text" 
+          placeholder="Genre" 
+          value={genre} 
+          onChange={(e) => setGenre(e.target.value)} 
+        />
+        <input 
+          type="text" 
+          placeholder="Condition" 
+          value={condition} 
+          onChange={(e) => setCondition(e.target.value)} 
+        />
+        <input 
+          type="text" 
+          placeholder="Availability (true/false)" 
+          value={availability} 
+          onChange={(e) => setAvailability(e.target.value)} 
+        />
+        <button type="submit">Add Book</button>
+      </form>
+    </div>
+  );
 }
 
 export default AddBook;
